@@ -29,3 +29,11 @@ When `mvn test` runs, Maven Surefire looks for compiled test classes in `target/
 Because TestNG is a project dependency, Surefire uses its TestNG provider to run the test methods annotated with `@Test`. The class naming pattern helps Surefire find test classes; the `@Test` annotation tells TestNG which methods to execute. This project does not currently use a `testng.xml` suite file.
 
 Surefire also writes its standard test results to `target/surefire-reports`. This is separate from the ExtentReports HTML report at `target/extent-report.html`.
+
+## Run in Jenkins
+
+The root `Jenkinsfile` checks out the selected branch, runs `mvn clean test` with headless Chrome, publishes Surefire test results, and archives the Extent report and any failure screenshots.
+
+The Jenkins agent needs Java 17 or newer, Maven available on `PATH`, and Google Chrome installed. Selenium Manager resolves the matching ChromeDriver, so the agent needs network access when it must download a driver.
+
+Create a **Multibranch Pipeline** job for this GitHub repository so Jenkins can discover and build branches that contain a `Jenkinsfile`. After configuring the repository source, scan the repository; Jenkins will create jobs for discovered branches.
